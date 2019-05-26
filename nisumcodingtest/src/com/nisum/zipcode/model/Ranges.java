@@ -6,13 +6,17 @@ import java.util.List;
 
 public class Ranges<T extends Comparable<T>> implements Comparator<List<T>> {
 
-	private ArrayList<Integer> range = new ArrayList<Integer>();
+	private ArrayList<Integer> range;
+	
+	public Ranges() {
+		this.range = new ArrayList<Integer>();
+	}
 
 	public ArrayList<Integer> getRange() {
 		return range;
 	}
 
-	public void addRange(int max, int min) {
+	public void addRange(int min, int max) {
 		this.range.add(max);
 		this.range.add(min);
 	}
