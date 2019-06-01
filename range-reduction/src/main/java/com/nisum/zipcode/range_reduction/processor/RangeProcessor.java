@@ -1,11 +1,11 @@
-package com.nisum.zipcode.processor;
+package com.nisum.zipcode.range_reduction.processor;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.nisum.zipcode.model.Ranges;
+import com.nisum.zipcode.range_reduction.model.Ranges;
 
 public class RangeProcessor {
 
@@ -26,35 +26,44 @@ public class RangeProcessor {
 			if (flag) {
 				continue;
 			}
-			int min = ranges.get(0);
-			int max = ranges.get(1);
 
-			int nextMin = rangesToReduce.get(nextIndex).get(0);
-			int nextMax = rangesToReduce.get(nextIndex).get(1);
+			if (rangesToReduce.size() != nextIndex) {
+				int min = ranges.get(0);
+				int max = ranges.get(1);
 
-			if (max >= nextMin) {
-				Ranges<Integer> ranges1 = new Ranges<Integer>();
-				if (max >= nextMax) {
-					ranges1.addRange(max, min);
-					reducedRanges.add(ranges1);
+				int nextMin = rangesToReduce.get(nextIndex).get(0);
+				int nextMax = rangesToReduce.get(nextIndex).get(1);
+
+				if (max >= nextMin) {
+					Ranges<Integer> ranges1 = new Ranges<Integer>();
+					if (max >= nextMax) {
+						ranges1.addRange(max, min);
+						reducedRanges.add(ranges1);
+					} else {
+						ranges1.addRange(nextMax, min);
+						reducedRanges.add(ranges1);
+					}
+					traversedRangeList[nextIndex] = true;
+
 				} else {
-					ranges1.addRange(nextMax, min);
-					reducedRanges.add(ranges1);
+					populateAndAddReducedRanges(reducedRanges, ranges);
 				}
-				traversedRangeList[nextIndex] = true;
-
 			} else {
-				Ranges<Integer> ranges2 = new Ranges<Integer>();
-				ranges2.getRange().addAll(ranges);
-				reducedRanges.add(ranges2);
+				populateAndAddReducedRanges(reducedRanges, ranges);
 			}
 		}
 		return reducedRanges;
 	}
 
+	private static void populateAndAddReducedRanges(final List<Ranges<Integer>> reducedRanges, final List<Integer> ranges) {
+		Ranges<Integer> ranges2 = new Ranges<Integer>();
+		ranges2.getRange().addAll(ranges);
+		reducedRanges.add(ranges2);
+	}
+
 	private static void getSortedZipcodeRanges(List<ArrayList<Integer>> rangesToReduce) {
 		Collections.sort(rangesToReduce, new Ranges<Integer>());
-		for(List<Integer> ranges: rangesToReduce) {
+		for (List<Integer> ranges : rangesToReduce) {
 			Collections.sort(ranges);
 		}
 	}

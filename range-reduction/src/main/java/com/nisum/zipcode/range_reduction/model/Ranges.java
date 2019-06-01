@@ -1,4 +1,4 @@
-package com.nisum.zipcode.model;
+package com.nisum.zipcode.range_reduction.model;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,7 +20,7 @@ public class Ranges<T extends Comparable<T>> implements Comparator<List<T>> {
 		this.range.add(max);
 		this.range.add(min);
 	}
-
+	
 	@Override
 	public int compare(List<T> o1, List<T> o2) {
 		for (int index = 0; index < Math.min(o1.size(), o2.size()); index++) {
